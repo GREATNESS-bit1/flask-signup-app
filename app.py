@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request
-import mysql.connector
-from mysql.connector import Error
+import psycopg2
+from psycopg2 import Error
 from werkzeug.security import generate_password_hash
+import os
 
 app = Flask(__name__)
 
 def get_db_connection():
-    return mysql.connector.connect(
-        host='localhost',
-        user='root',
-        password='HOLUWATHOBY123!',
-        database='flask_app'
+    return psycopg2.connect(
+        host=os.environ.get('DB_HOST'),
+        database=os.environ.get('DB_NAME'),
+        user=os.environ.get('DB_USER'),
+        password=os.environ.get('DB_PASSWORD'),
+        port=os.environ.get('DB_PORT', 5432)
     )
 
 @app.route('/')
