@@ -15,6 +15,25 @@ def get_db_connection():
         port=os.environ.get('DB_PORT', 5432)
     )
 
+def create_table():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS tbl_user (
+                id SERIAL PRIMARY KEY,
+                username VARCHAR(100) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL
+            )
+        """)
+        conn.commit()
+        cursor.close()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+create_table()
+
 @app.route('/')
 def home():
     return render_template('index.html')
